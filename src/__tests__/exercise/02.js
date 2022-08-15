@@ -6,6 +6,7 @@ import {act} from 'react-dom/test-utils'
 import {createRoot} from 'react-dom/client'
 // 🐨 import the `render` and `fireEvent` utilities from '@testing-library/react'
 import Counter from '../../components/counter'
+import {render} from 'react-dom'
 
 // NOTE: this is a new requirement in React 18
 // https://reactjs.org/blog/2022/03/08/react-18-upgrade-guide.html#configuring-your-testing-environment
@@ -22,6 +23,8 @@ test('counter increments and decrements when the buttons are clicked', () => {
   // 💣 remove these two lines, React Testing Library will create the div for you
   const div = document.createElement('div')
   document.body.append(div)
+
+  expect(message).toHaveTextContent()
 
   // 🐨 swap createRoot and root.render with React Testing Library's render
   // Note that React Testing Library's render doesn't need you to pass a `div`
