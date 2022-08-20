@@ -5,25 +5,27 @@ import * as React from 'react'
 import {render, screen} from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import Login from '../../components/login'
+import {build, fake} from '@jackfranklin/test-data-bot'
+
+const buildLoginForm = build({
+  fields: {
+    username: fake(f => f.internet.userName()),
+    password: fake(f => f.internet.password()),
+  },
+})
 
 test('submitting the form calls onSubmit with username and password', async () => {
-  let submittedData
-
-  const handleSubmit = (data) => (submittedData = data)
-
+  const handleSubmit = jest.fn()
   render(<Login onSubmit={handleSubmit} />)
+  const {username, password} = buildLoginForm()
 
-  const username = screen.getByLabelText(/username/i)
-  const password = screen.getByLabelText(/password/i)
-
-  await userEvent.type
-  // 🐨 use `await userEvent.type...` to change the username and password fields to
-  //    whatever you want
-  //
-  // 🐨 click on the button with the text "Submit"
-  //
-  // assert that submittedData is correct
-  // 💰 use `toEqual` from Jest: 📜 https://jestjs.io/docs/en/expect#toequalvalue
+  await userEvent.type(screen.getByLabelText(/username/i, {}), username)
+  await userEvent.type(screen.getByLabelText(/password/i, {}), password)
+  await userEvent.click(screen.getByRole('button', {name: /submit/i}))
+  expect(handleSubmit).toHaveBeenLastCalledWith({
+    username,
+    password,
+  })
 })
 
 /*
